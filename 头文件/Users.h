@@ -2,7 +2,7 @@
 	Filename:Users.h
 	Time:2024/7/6
 	Author:Haoren wang
-	Description:ÅÉÉúÀàUsersÀàµÄÉùÃ÷
+	Description:æ´¾ç”Ÿç±»Usersç±»çš„å£°æ˜
 
 **********************************************/
 
@@ -15,24 +15,24 @@
 class Users :virtual public Management
 {
 public:
-	//ÎŞ²Î¹¹Ôìº¯ÊıUser(),ÓÉÓÚÓÃ»§ĞÅÏ¢Í¨¹ıÎÄ¼şÊäÈë£¬ËùÒÔ¿ÉÓĞ¿ÉÎŞ£¬½öÆğÌáÊ¾×÷ÓÃ
-	//Îö¹¹º¯Êı~Users(),ÌáÊ¾×÷ÓÃ(¿ÉÖ®ºó¸ÄÎªĞéÎö¹¹º¯Êı)
+	//æ— å‚æ„é€ å‡½æ•°User(),ç”±äºç”¨æˆ·ä¿¡æ¯é€šè¿‡æ–‡ä»¶è¾“å…¥ï¼Œæ‰€ä»¥å¯æœ‰å¯æ— ï¼Œä»…èµ·æç¤ºä½œç”¨
+	//ææ„å‡½æ•°~Users(),æç¤ºä½œç”¨(å¯ä¹‹åæ”¹ä¸ºè™šææ„å‡½æ•°)
 	Users();
 	~Users();
 
-	//Í¨¹ı¶ÁÎÄ¼ş´òÓ¡ÓÃ»§ĞÅÏ¢:Getinfo()
-	//Í¨¹ıĞ´ÎÄ¼ş¸ü¸ÄÓÃ»§ĞÅÏ¢:Resetinfo()
+	//é€šè¿‡è¯»æ–‡ä»¶æ‰“å°ç”¨æˆ·ä¿¡æ¯:Getinfo()
+	//é€šè¿‡å†™æ–‡ä»¶æ›´æ”¹ç”¨æˆ·ä¿¡æ¯:Resetinfo()
 	virtual void Getinfo() const;
 	virtual void Resetinfo();
 
-	//Á÷ÊäÈëÔËËã·ûÖØÔØ
+	//æµè¾“å…¥è¿ç®—ç¬¦é‡è½½
 	friend std::istream& operator>>(istream&, Users&);
-	//Á÷Êä³öÔËËã·ûÖØÔØ
+	//æµè¾“å‡ºè¿ç®—ç¬¦é‡è½½
 	friend std::ostream& operator<<(ostream&, Users&);
 private:
-	//UserName¼ÇÂ¼ÓÃ»§ĞÕÃû
-	//Sex¼ÇÂ¼ÓÃ»§ĞÔ±ğ
-	//HistoryÓÃ×Ö·û´®¼ÇÂ¼½èÔÄÀúÊ·
+	//UserNameè®°å½•ç”¨æˆ·å§“å
+	//Sexè®°å½•ç”¨æˆ·æ€§åˆ«
+	//Historyç”¨å­—ç¬¦ä¸²è®°å½•å€Ÿé˜…å†å²
 	char* UserName;
 	char* Sex;
 	char* History[5];
