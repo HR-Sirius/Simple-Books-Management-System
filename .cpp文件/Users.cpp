@@ -2,87 +2,113 @@
 	Filename:Users.h
 	Time:2024/7/6
 	Author:Haoren wang
-	Description:UsersÀàµÄ¶¨Òå
+	Description:Usersç±»çš„å®šä¹‰
 
 **********************************************/
 
 #include "Users.h"
+#include "Book.h"
 
-//Í¨¹ı¶ÁÎÄ¼ş´òÓ¡ÓÃ»§ĞÅÏ¢:Getinfo()
+//é€šè¿‡è¯»æ–‡ä»¶æ‰“å°ç”¨æˆ·ä¿¡æ¯:Getinfo()
 void Users::Getinfo() const
 {
-	fstream infile;		//¶¨ÒåfstreamÀà¶ÔÏó£¬ÊµÏÖÎÄ¼şĞÅÏ¢µÄ½ÓÊÕ
-	infile.open("C:\\Users\\10904\\Desktop\\BMS\\Users_testdata.txt", ios::in);		//ifile¹ØÁªUsers_testdata.txtÎÄ¼ş
+	fstream infile;		//å®šä¹‰fstreamç±»å¯¹è±¡ï¼Œå®ç°æ–‡ä»¶ä¿¡æ¯çš„æ¥æ”¶
+	infile.open("C:\\Users\\10904\\Desktop\\BMS\\Users_testdata.txt", ios::in);		//ifileå…³è”Users_testdata.txtæ–‡ä»¶
 
-	//¼ì²âÎÄ¼ş´ò¿ªÊÇ·ñ³É¹¦
+	//æ£€æµ‹æ–‡ä»¶æ‰“å¼€æ˜¯å¦æˆåŠŸ
 	if (!infile)
 	{
 		cout << "File open failed!" << endl;
 		return;
 	}
 
-	Users Temp_User;	 //¶¨ÒåÁÙÊ±UserÀàĞÍ¶ÔÏó£¬ÓÃÓÚ½ÓÊÕÎÄ¼şÄÚÈİ
+	Users Temp_User;	 //å®šä¹‰ä¸´æ—¶Userç±»å‹å¯¹è±¡ï¼Œç”¨äºæ¥æ”¶æ–‡ä»¶å†…å®¹
 
 	while(infile.eof() != 0)
 	{
 		infile.read((char*)&Temp_User, sizeof(Users));
-		cout << "ÓÃ»§ĞÅÏ¢£º";
+		cout << "ç”¨æˆ·ä¿¡æ¯ï¼š";
 		cout << endl << Temp_User;
 	}
 
 	infile.close();
 }
 
-//ÓÃ»§Êı¾İÔÚMain.cppÖĞÊäÈë
-//Í¨¹ıĞ´ÎÄ¼ş¸ü¸ÄÓÃ»§ĞÅÏ¢:Resetinfo()
+//ç”¨æˆ·æ•°æ®åœ¨Main.cppä¸­è¾“å…¥
+//é€šè¿‡å†™æ–‡ä»¶æ›´æ”¹ç”¨æˆ·ä¿¡æ¯:Resetinfo()
 void Users::Resetinfo()
 {
 	fstream outfile;
 	outfile.open("C:\\Users\\10904\Desktop\\BMS\\Users_testdata.txt", ios::out|ios::ate);
 
-	//¼ì²âÎÄ¼ş´ò¿ªÊÇ·ñ³É¹¦
+	//æ£€æµ‹æ–‡ä»¶æ‰“å¼€æ˜¯å¦æˆåŠŸ
 	if (!outfile)
 	{
 		cout << "File open failed!" << endl;
 		return;
 	}
 
-	int User_No;	//ÓÃÓÚÓÃ»§ĞÅÏ¢ÔÚÎÄ¼şÖĞµÄ¶¨Î»,ÓÃ»§ĞÅÏ¢ÒÔ¶ÔÏóÊı×éĞÎÊ½´¢´æ,Ö®ºóÔÚMain.cppÖĞÌí¼ÓÏÔÊ¾ËùÓĞÓÃ»§µÄÊı×éÏÂ±ê+ĞÕÃûµÄº¯Êı
+	int User_No;	//ç”¨äºç”¨æˆ·ä¿¡æ¯åœ¨æ–‡ä»¶ä¸­çš„å®šä½,ç”¨æˆ·ä¿¡æ¯ä»¥å¯¹è±¡æ•°ç»„å½¢å¼å‚¨å­˜,ä¹‹ååœ¨Main.cppä¸­æ·»åŠ æ˜¾ç¤ºæ‰€æœ‰ç”¨æˆ·çš„æ•°ç»„ä¸‹æ ‡+å§“åçš„å‡½æ•°
 
-	Users Temp_User;	//¶¨ÒåÁÙÊ±UserÀàĞÍ¶ÔÏó£¬ÓÃÓÚÊäÈëÒªĞŞ¸ÄµÄÎÄ¼şÄÚÈİ
+	Users Temp_User;	//å®šä¹‰ä¸´æ—¶Userç±»å‹å¯¹è±¡ï¼Œç”¨äºè¾“å…¥è¦ä¿®æ”¹çš„æ–‡ä»¶å†…å®¹
 
-	cout << "ÊäÈëÓÃ»§±àºÅ£º";
+	cout << "è¾“å…¥ç”¨æˆ·ç¼–å·ï¼š";
 	cin >> User_No;
 	outfile.seekp(sizeof(Users)*(User_No-1), ios::beg);
 
 	cin >> Temp_User;
-	outfile.write((char*)&Temp_User, sizeof(Users));	//ÏòÖ¸¶¨Î»ÖÃÊäÈë¸ü¸ÄºóµÄÓÃ»§ĞÅÏ¢
+	outfile.write((char*)&Temp_User, sizeof(Users));	//å‘æŒ‡å®šä½ç½®è¾“å…¥æ›´æ”¹åçš„ç”¨æˆ·ä¿¡æ¯
 
-	cout << "ÓÃ»§ĞÅÏ¢ĞŞ¸Ä³É¹¦" << endl;
+	cout << "ç”¨æˆ·ä¿¡æ¯ä¿®æ”¹æˆåŠŸ" << endl;
 
 	outfile.close();
 }
 
-//Á÷ÊäÈëÔËËã·ûÖØÔØ
+//ç”±æ–°åˆ°æ—§è¾“å‡ºç”¨æˆ·å€Ÿé˜…å†å²
+void Users::Showhistory()
+{
+	int i;
+	for (i = 4; i >= 0; i++)
+	{
+		int tempNo;
+		tempNo = (*this).History[i];
+		if (!tempNo)
+			break;
+		else
+		{
+			cout << "å€Ÿé˜…å†å²ï¼š" << endl;
+			cout << All_Books[tempNo - 1].GetBookInfo().BookName << endl;
+		}
+	}
+}
+
+//æµè¾“å…¥è¿ç®—ç¬¦é‡è½½
 std::istream& operator>>(istream&input, Users&User)
 {
-	cout << "ÊäÈëÓÃ»§ĞÕÃû:";
+	cout << "è¾“å…¥ç”¨æˆ·å§“å:";
 	input >> User.UserName;
-	cout << "ÊäÈëÓÃ»§ĞÔ±ğ:";
+	cout << "è¾“å…¥ç”¨æˆ·æ€§åˆ«:";
 	input >> User.Sex;
 	return input;
 }
 
-//Á÷Êä³öÔËËã·ûÖØÔØ
+//æµè¾“å‡ºè¿ç®—ç¬¦é‡è½½
 std::ostream& operator<<(ostream& output, Users& User)
 {
-	output << "ÓÃ»§ĞÕÃû:" << User.UserName << endl;
-	output << "ÓÃ»§ĞÔ±ğ:" << User.Sex << endl;
+	output << "ç”¨æˆ·å§“å:" << User.UserName << endl;
+	output << "ç”¨æˆ·æ€§åˆ«:" << User.Sex << endl;
 	return output;
+}
+
+char* Users::GetName()
+{
+	return (*this).UserName;
 }
 
 Users::Users()
 {
+	User_No = currentUsers;
+	currentUsers++;
 	cout << "Users constructor called." << endl;
 }
 
