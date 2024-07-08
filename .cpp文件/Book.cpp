@@ -2,7 +2,7 @@
 	Filename:Book.cpp
 	Time:2024/7/7
 	Author:Haoren Wang
-	Description:BookÀàµÄ¶¨Òå
+	Description:Bookç±»çš„å®šä¹‰
 
 **********************************************/
 
@@ -10,124 +10,123 @@
 
 void Book::Getinfo() const
 {
-	fstream infile;		//¶¨ÒåfstreamÀà¶ÔÏó£¬ÊµÏÖÎÄ¼şĞÅÏ¢µÄ½ÓÊÕ
-	infile.open("C:\\Users\\10904\\Desktop\\BMS\\Books_testdata.txt", ios::in);		//infile¹ØÁªBooks_testdata.txtÎÄ¼ş
+	fstream infile;		//å®šä¹‰fstreamç±»å¯¹è±¡ï¼Œå®ç°æ–‡ä»¶ä¿¡æ¯çš„æ¥æ”¶
+	infile.open("C:\\Users\\10904\\Desktop\\BMS\\Books_testdata.txt", ios::in);		//infileå…³è”Books_testdata.txtæ–‡ä»¶
 
-	//¼ì²âÎÄ¼ş´ò¿ªÊÇ·ñ³É¹¦
+	//æ£€æµ‹æ–‡ä»¶æ‰“å¼€æ˜¯å¦æˆåŠŸ
 	if (!infile)
 	{
 		cout << "File open failed!" << endl;
 		return;
 	}
 
-	Book Temp_Book;	 //¶¨ÒåÁÙÊ±UserÀàĞÍ¶ÔÏó£¬ÓÃÓÚ½ÓÊÕÎÄ¼şÄÚÈİ
+	Book Temp_Book;	 //å®šä¹‰ä¸´æ—¶Userç±»å‹å¯¹è±¡ï¼Œç”¨äºæ¥æ”¶æ–‡ä»¶å†…å®¹
 
 	while (infile.eof() != 0)
 	{
 		infile.read((char*)&Temp_Book, sizeof(Book));
-		cout << "Êé¼®ĞÅÏ¢£º";
+		cout << "ä¹¦ç±ä¿¡æ¯ï¼š";
 		cout << endl << Temp_Book;
 	}
 
 	infile.close();
 }
 
-//Í¨¹ıĞ´ÎÄ¼ş¸ü¸ÄÊé¼®ĞÅÏ¢:Resetinfo()
+//é€šè¿‡å†™æ–‡ä»¶æ›´æ”¹ä¹¦ç±ä¿¡æ¯:Resetinfo()
 void Book::Resetinfo()
 {
 	fstream outfile;
 	outfile.open("C:\\Users\\10904\Desktop\\BMS\\Books_testdata.txt", ios::out | ios::ate);
 
-	//¼ì²âÎÄ¼ş´ò¿ªÊÇ·ñ³É¹¦
+	//æ£€æµ‹æ–‡ä»¶æ‰“å¼€æ˜¯å¦æˆåŠŸ
 	if (!outfile)
 	{
 		cout << "File open failed!" << endl;
 		return;
 	}
 
-	Book Temp_Book;	//¶¨ÒåÁÙÊ±UserÀàĞÍ¶ÔÏó£¬ÓÃÓÚÊäÈëÒªĞŞ¸ÄµÄÎÄ¼şÄÚÈİ
+	Book Temp_Book;	//å®šä¹‰ä¸´æ—¶Userç±»å‹å¯¹è±¡ï¼Œç”¨äºè¾“å…¥è¦ä¿®æ”¹çš„æ–‡ä»¶å†…å®¹
 
 	int Book_No;
 
-	cout << "ÊäÈëÊé¼®±àºÅ:";
+	cout << "è¾“å…¥ä¹¦ç±ç¼–å·:";
 	cin >> Book_No;
 
 	outfile.seekp(sizeof(Book)*(Book_No-1), ios::beg);
 
 	cin >> Temp_Book;
-	outfile.write((char*)&Temp_Book, sizeof(Book));	//ÏòÖ¸¶¨Î»ÖÃÊäÈë¸ü¸ÄºóµÄÊé¼®ĞÅÏ¢
+	outfile.write((char*)&Temp_Book, sizeof(Book));	//å‘æŒ‡å®šä½ç½®è¾“å…¥æ›´æ”¹åçš„ä¹¦ç±ä¿¡æ¯
 
-	cout << "Êé¼®ĞÅÏ¢ĞŞ¸Ä³É¹¦" << endl;
+	cout << "ä¹¦ç±ä¿¡æ¯ä¿®æ”¹æˆåŠŸ" << endl;
 
 	outfile.close();
 }
 
-//Á÷ÊäÈëÔËËã·ûÖØÔØ(1)
+//æµè¾“å…¥è¿ç®—ç¬¦é‡è½½(1)
 istream& operator>>(istream&input, Info&Info)
 {
-	cout << "ÊäÈëÊéÃû£º";
+	cout << "è¾“å…¥ä¹¦åï¼š";
 	input >> Info.BookName;
-	cout << "ÊäÈë×÷ÕßĞÕÃû£º";
+	cout << "è¾“å…¥ä½œè€…å§“åï¼š";
 	input >> Info.Author;
-	cout << "ÊäÈë¼ò½é£º";
+	cout << "è¾“å…¥ç®€ä»‹ï¼š";
 	input >> Info.Outline;
-	cout << "ÊäÈëÊé¼®ÀàĞÍ";
+	cout << "è¾“å…¥ä¹¦ç±ç±»å‹";
 	input >> Info.Booktype;
-	cout << "ÊäÈëÊé¼®¹Ø¼ü´Ê£¨ÖÁ¶àÈı¸ö£©";
+	cout << "è¾“å…¥ä¹¦ç±å…³é”®è¯ï¼ˆè‡³å¤šä¸‰ä¸ªï¼‰";
 	input >> Info.Keywords[0] >> Info.Keywords[1] >> Info.Keywords[2];
 	return input;
 }
 
-//Á÷ÊäÈëÔËËã·ûÖØÔØ(2)
+//æµè¾“å…¥è¿ç®—ç¬¦é‡è½½(2)
 istream& operator>>(istream&input, Book&Book)
 {
-	cout << "ÊäÈëÊé¼®±àºÅ:";
+	cout << "è¾“å…¥ä¹¦ç±ç¼–å·:";
 	input >> Book.BookNo;
 	input >> Book.BookInfo;
 	return input;
 }
 
-//Á÷ÊäÈëÔËËã·ûÖØÔØ(3)
+//æµè¾“å…¥è¿ç®—ç¬¦é‡è½½(3)
 istream& operator>>(istream&input, type&type)
 {
-	//½«ÕûĞÍÊıÇ¿ĞĞ×ª»»Îªenum typeÀà
+	//å°†æ•´å‹æ•°å¼ºè¡Œè½¬æ¢ä¸ºenum typeç±»
 	int type_Num;
 
-	cout << endl << "Êé¼®ÀàĞÍ£ºsuspense = 1, science = 2, fantasy = 3, romance = 4, criminal = 5, encyclopedia = 6" << endl << endl;
+	cout << endl << "ä¹¦ç±ç±»å‹ï¼šsuspense = 1, science = 2, fantasy = 3, romance = 4, criminal = 5, encyclopedia = 6" << endl << endl;
 
-	cout << "ÊäÈëÊé¼®ÀàĞÍ£º";
+	cout << "è¾“å…¥ä¹¦ç±ç±»å‹ï¼š";
 	input >> type_Num;
 	type = (enum type)type_Num;
 	return input;
 }
 
 
-//Á÷Êä³öÔËËã·ûÖØÔØ(1)
+//æµè¾“å‡ºè¿ç®—ç¬¦é‡è½½(1)
 ostream& operator<<(ostream&output, Info&Info)
 {
-	cout << "ÊéÃû£º";
-	output << Info.BookName << endl;
-	cout << "×÷ÕßĞÕÃû£º";
-	output << Info.Author << endl;
-	cout << "¼ò½é£º";
-	output << Info.Outline << endl;
-	cout << "Êé¼®ÀàĞÍ£º";
-	output << Info.Booktype << endl;
-	cout << "Êé¼®¹Ø¼ü´Ê£º";
-	output << Info.Keywords[0] << '\t' << Info.Keywords[1] << '\t' << Info.Keywords[2] << endl;
+	output << "ä¹¦åï¼š" << Info.BookName << endl;
+	output << "ä½œè€…å§“åï¼š" << Info.Author << endl;
+	output << "ç®€ä»‹ï¼š" << Info.Outline << endl;
+	output << "ä¹¦ç±ç±»å‹ï¼š" << Info.Booktype << endl;
+	output <<"ä¹¦ç±å…³é”®è¯ï¼š"<< Info.Keywords[0] << '\t' << Info.Keywords[1] << '\t' << Info.Keywords[2] << endl;
 	return output;
 }
 
-//Á÷Êä³öÔËËã·ûÖØÔØ(2)
+//æµè¾“å‡ºè¿ç®—ç¬¦é‡è½½(2)
 ostream& operator<<(ostream&output, Book&Book)
 {
-	cout << "Êé¼®±àºÅ£º";
-	output << Book.BookNo << endl;
+	output << "ä¹¦ç±ç¼–å·ï¼š" << Book.BookNo << endl;
 	output << Book.BookInfo << endl;
+	output << "å€Ÿé˜…çŠ¶æ€ï¼š";
+	if (Book.State)
+		output << "å¯å€Ÿå‡º" << endl;
+	else
+		output << "å·²å€Ÿå‡º" << endl;
 	return output;
 }
 
-//Á÷Êä³öÔËËã·ûÖØÔØ(3)
+//æµè¾“å‡ºè¿ç®—ç¬¦é‡è½½(3)
 ostream& operator<<(ostream&output, type&type_Num)
 {
 	switch (type_Num)
@@ -140,6 +139,35 @@ ostream& operator<<(ostream&output, type&type_Num)
 		default:cout << "encyclopedia" << endl;
 	}
 	return output;
+}
+
+//Bookç±»æ„é€ å‡½æ•°
+Book::Book()
+{
+	BookNo = currentbook;
+	currentbook++;
+}
+
+void Book::Brief_Show(int No)
+{
+	//å¾…æ·»åŠ []é‡è½½å‡½æ•°ï¼Œå¢åŠ æ•°ç»„è¶Šç•ŒåŠŸèƒ½æ£€æµ‹
+	//å¾…æ·»åŠ æ ¼å¼åŒ–åŠŸèƒ½ï¼Œä½¿ç¼–å·å‡æ˜¾ç¤ºä¸ºä¸‰ä½æ•°ï¼Œå¦‚001ï¼Œ015
+	cout << "ä¹¦ç±ç¼–å·ï¼š" << No << '\t' << All_Books[No-1].BookInfo.BookName << endl;
+}
+
+bool* Book::GetState()
+{
+	return &(*this).State;
+}
+
+int* Book::GetBookNo()
+{
+	return &(*this).BookNo;
+}
+
+Info Book::GetBookInfo()
+{
+	return (*this).BookInfo;
 }
 
 void Book::Search() const
