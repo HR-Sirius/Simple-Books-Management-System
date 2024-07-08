@@ -2,7 +2,7 @@
 	Filename:Lend.h
 	Time:2024/7/4
 	Author:Haoren wang
-	Description:ÅÉÉúÀàLendÀàµÄÉùÃ÷
+	Description:æ´¾ç”Ÿç±»Lendç±»çš„å£°æ˜
 
 **********************************************/
 
@@ -10,18 +10,32 @@
 #define _LEND
 
 #include"Book.h"
+#include"Users.h"
 
-class Lend :virtual public Book
+class Lend :virtual public Users
 {
+	friend Book;
 public:
-	//½èÔÄ²Ù×÷º¯Êı:Borrow()
-	//¸ü¸ÄÓÃ»§½èÔÄÀúÊ·:Resetinfo()
-	//Í³¼Æ½èÔÄÊı¾İ:statistic()
+	//å€Ÿé˜…æ“ä½œ,ç»Ÿè®¡å€Ÿé˜…æ•°æ®:Borrow(int)
+	//è¿˜ä¹¦:Return(int)
+	//æ›´æ”¹ç”¨æˆ·å€Ÿé˜…å†å²:Resetinfo()
+	//æ’åº:Bubble_sort()
+	//è¾“å‡ºç»Ÿè®¡ç»“æœ:Show_top_Books(),Show_top_Users()
 	void Borrow();
-	virtual void Resetinfo();
-	void Statistic();
+	void Return();
+	virtual void Resethistory(int);
+	void Bubble_sort(int[],int,int[],int);
+	void Show_top_Books(int[],int);
+	void Show_top_Users(int[], int);
 private:
-	;
+	//ç»Ÿè®¡æœ€çƒ­é—¨ä¹¦ç±,ç”¨äºè®¡æ•°:pop_Book[50]
+	//ç»Ÿè®¡æœ€å‹¤å¥‹è¯»è€…,ç”¨äºè®¡æ•°:pop_User[50]
+	//æœ€çƒ­é—¨ä¹¦ç±ï¼štop_Book[5]
+	//æœ€å‹¤å¥‹è¯»è€…:top_Users[3]
+	int pop_Book[50] = { 0 };
+	int pop_User[50] = { 0 };
+	int top_Books[5] = { 0 };
+	int top_Users[3] = { 0 };
 };
 
 #endif _LEND
