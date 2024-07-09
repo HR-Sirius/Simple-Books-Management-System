@@ -2,13 +2,14 @@
 	Filename:Management.h
 	Time:2024/7/3
 	Author:Haoren Wang
-	Description:Management³éÏó»ùÀàµÄÉùÃ÷
+	Description:ManagementæŠ½è±¡åŸºç±»çš„å£°æ˜
 
 ***********************************************/
 
 #include<iostream>
 #include<fstream>
 #include<stdlib.h>
+#include<assert.h>
 using namespace std;
 
 #ifndef _MANAGEMENT
@@ -17,10 +18,12 @@ using namespace std;
 class Management
 {
 public:
-	//´òÓ¡¶ÔÏóĞÅÏ¢:Getinfo()
-	//¸ü¸Ä¶ÔÏóĞÅÏ¢:Resetinfo()
+	//æ‰“å°å¯¹è±¡ä¿¡æ¯:Getinfo()
+	//æ›´æ”¹å¯¹è±¡ä¿¡æ¯:Resetinfo()
 	virtual void Getinfo() const = 0;
 	virtual void Resetinfo() = 0;
-};
+
+	//æ’åº:Bubble_sort()
+	void Bubble_sort(int[], int[], int);
 
 #endif
