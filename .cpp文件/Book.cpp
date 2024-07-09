@@ -169,8 +169,3 @@ Info Book::GetBookInfo()
 {
 	return (*this).BookInfo;
 }
-
-void Book::Search() const
-{
-
-}
