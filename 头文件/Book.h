@@ -11,7 +11,6 @@
 
 #include"Management.h"
 
-
 enum type
 {
 	suspense = 1, science = 2, fantasy = 3, romance = 4, criminal = 5, encyclopedia = 6
@@ -33,7 +32,6 @@ struct Info
 
 class Book :virtual public Management
 {
-	friend Book;
 public:
 	//静态对象，用于计数
 	static int currentbook;
@@ -51,8 +49,6 @@ public:
 
 	//简明输出，用于输出搜索结果
 	void Brief_Show(int);
-	//搜索方法(最重要函数)，由于搜索结果是书名若干，因此计划将搜索结果保存在临时创建的数组中，逐一打印
-	void Search() const;
 	//接口函数,返回(*this).BookNo地址
 	int* GetBookNo();
 	//接口函数,返回(*this).State地址
@@ -87,6 +83,5 @@ int Book::currentbook = 1;
 
 //Book类全局对象数组(暂时不会链表，做不出来能够自由添加成员的功能)
 Book All_Books[50];
-
 
 #endif _BOOK
