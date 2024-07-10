@@ -41,7 +41,6 @@ public:
 	Book();
 	~Book();
 	
-	//通过对象数组创建Book类全局对象
 	//通过读文件获取书籍信息:Getinfo()
 	//通过写文件更改书籍信息:Resetinfo()
 	virtual void Getinfo() const;
