@@ -32,10 +32,10 @@ class Users :virtual public Management
 	static int top_Books[5];
 	static int top_Users[3];
 
-public:
 	//静态对象，自动生成用户编号
 	static int currentUsers;
-	
+
+public:
 	//输出用户借阅历史:Showhistory()
 	void Showhistory();
 	//接口函数，返回用户姓名
@@ -44,6 +44,7 @@ public:
 	void Show_top_Books();
 	void Show_top_Users();
 	//搜索方法(最重要函数)，由于搜索结果是书名若干，因此计划将搜索结果保存在临时创建的数组中，逐一打印
+	//输入字符串，遍历所有对象书名，输出对应结果
 	void Search() const;
 
 	//无参构造函数User(),实现用户自动编号功能
