@@ -25,5 +25,6 @@ public:
 
 	//排序:Bubble_sort()
 	void Bubble_sort(int[], int[], int);
+};
 
 #endif
