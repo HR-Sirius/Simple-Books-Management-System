@@ -2,40 +2,35 @@
 	Filename:Management.cpp
 	Time:2024/7/9
 	Author:Haoren wang
-	Description:ManagementÀàµÄ¶¨Òå
+	Description:Managementç±»çš„å®šä¹‰
 
 **********************************************/
 
 #include"Management.h"
 
-extern Book All_Books[50];
-extern Users All_Users[50];
-
-void Management::Bubble_sort(int N[], int M[], int length)
+void Management::Bubble_sort(int pop_[], int top_[],int top_length)
 {
-	//½«Êı×éµÄÖµ´Ó´óµ½Ğ¡ÅÅÁĞ£¬²¢²»¸Ä±äÔ­Êı×éµÄÖµ
-	//¶¯Ì¬´´½¨Ö¸ÕëÊı×é£¬½«Ô­Êı×éµÄÅÅÁĞÔÚÖ¸ÕëÊı×éÖĞ½øĞĞ
-	int** parray = (int**)malloc(sizeof(int*) * length);
+	//æš‚å®šæ•°ç»„é•¿åº¦å‡ä¸º50ï¼Œä¹‹åå¯æ”¹ä¸ºåŠ¨æ€åˆ›å»ºæ•°ç»„
+	//å°†pop_[]çš„å€¼ä»å¤§åˆ°å°æ’åˆ—ï¼Œå¹¶ä¸æ”¹å˜åŸæ•°ç»„çš„å€¼
+	
+	int* parray[50];
+	int** pparray[50];
 	int i, j;
-	for (i = 0; i < length; i++)
+
+	//parray[i]->pop_[i]
+	for (i = 0; i < 50; i++)
 	{
-		parray[i] = (int*)malloc(sizeof(int));
+		parray[i] = &pop_[i];
 	}
 
-	//Ö¸ÕëÊı×éÔªËØÓëÔ­Êı×éÔªËØÒ»Ò»¶ÔÓ¦
-	for (i = 0; i < length; i++)
-	{
-		parray[i] = &N[i];
-	}
-
-	//´Ó´óµ½Ğ¡Ã°ÅİÅÅĞò
+	//ä»å¤§åˆ°å°å†’æ³¡æ’åº
 	int* temp = NULL;
-	for (j = length - 1; j >= 0; j--)
+	for (j = 49; j >= 0; j--)
 		for (i = 0; i < j; i++)
 		{
-			if (*parray[i] < *parray[i + 1])
+			if (*parray[i] < *parray[i+1])
 			{
-				// ½»»»Ö¸ÕëÖ¸Ïò,Ê¹parray[1]Ö¸Ïò×î´óÊıÖµ
+				// äº¤æ¢æŒ‡é’ˆæŒ‡å‘,ä½¿parray[0]æŒ‡å‘æœ€å¤§æ•°å€¼
 				temp = parray[i];
 				parray[i] = parray[i + 1];
 				parray[i + 1] = temp;
@@ -43,16 +38,14 @@ void Management::Bubble_sort(int N[], int M[], int length)
 			else;
 		}
 
-	//´¢´æÅÅĞò½á¹ûÔÚM[]ÖĞ
-	for (i = 0; i < length; i++)
-	{
-		M[i] = N[i];
-	}
-
-	//ÖğÒ»ÊÍ·Å¿Õ¼ä
-	for (i = 0; i < length; i++)
-	{
-		free(parray[i]);
-	}
-	free(parray);
+	//å‚¨å­˜æ’åºç»“æœ(ä¹¦ç±ç¼–å·)åœ¨top_[]ä¸­
+	for (i = 0; i < top_length; i++)
+		for (j = 0; j < 50; j++)
+		{
+			if (*parray[i] == pop_[j])
+			{
+				top_[i] = j;
+			}
+			break;
+		}
 }
