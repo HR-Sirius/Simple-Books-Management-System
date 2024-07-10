@@ -67,16 +67,14 @@ void Users::Resetinfo()
 void Users::Showhistory()
 {
 	int i;
-	for (i = 4; i >= 0; i++)
+	cout << "借阅历史：" << endl;
+	for (i = 4; i >= 0; i--)
 	{
-		int tempNo;
-		tempNo = (*this).History[i];
-		if (!tempNo)
+		if (!(*this).History[i])
 			break;
 		else
 		{
-			cout << "借阅历史：" << endl;
-			cout << All_Books[tempNo - 1].GetBookInfo().BookName << endl;
+			cout << All_Books[(*this).History[i]].GetBookInfo().BookName << endl;
 		}
 	}
 }
@@ -123,7 +121,7 @@ void Users::Borrow()
 	cin >> No;
 
 	fstream outfile;
-	outfile.open("C:\\Users\\10904\Desktop\\BMS\\Books_testdata.txt", ios::out | ios::ate);
+	outfile.open("C:\\Users\\10904\\Desktop\\BMS\\Books_testdata.txt", ios::out | ios::ate);
 
 	//检测文件打开是否成功
 	if (!outfile)
@@ -148,7 +146,7 @@ void Users::Borrow()
 		outfile.write((char*)&tempbook, sizeof(Book));
 		cout << "成功借阅!" << endl;
 		//增加数据统计功能,若All_Users[i]使用Borrow()成功借出书All_bookk[j]，则pop_Users[i]++，pop_Books[j]++
-		(*this).pop_User[(*this).User_No]++;
+		Users::pop_User[(*this).User_No]++;
 		pop_Book[No - 1]++;
 	}
 }
@@ -246,5 +244,93 @@ void Users::Show_top_Users()
 
 void Users::Search() const
 {
+	//保存输入的字符串 
+	char* tempname;
+	cout << "输入书名：";
+	cin >> tempname;
 
+	//i,j,k,l均用于计数
+	int i = 0;
+	int j = 0;
+	int k = 0;
+	int l = 0;
+	//将所有书名保存到临时数组Bookname[]中
+	char* Bookname[50];
+	for (; i < 50; i++)
+	{
+		strcpy(Bookname[i], All_Books[i].GetBookInfo().BookName);
+	}
+
+	//默认输入的书名长度<=目标书名长度
+	int len = strlen(tempname);
+	//flag标记是否符合要求,0不符合，1符合
+	bool flag;
+
+	cout << "搜索结果：" << endl;
+
+	for (i = 0; i < 50; i++)//从All_Book[0]的书名开始遍历，寻找可能的结果
+	{
+		//先排除输入长度大于书名长度的情况
+		if (len > strlen(Bookname[i]))
+		{
+			flag = 0;
+		}
+		//输入长度小于书名长度
+		else
+		{
+			for (j = 0; j < 29; j++)//默认书名长度不超过30,从Bookname[i]的第一个字符开始查找
+			{
+				//重置flag状态
+				flag = 0;
+
+				//寻找第一个不为通配符的字符
+				for (k = 0; k < len; k++)
+				{
+					//如果字符为通配符'?'，跳过
+					if (tempname[k] == '?')
+						continue;
+					else
+						break;
+				}
+				//Bookname[i]第j+1个字符与tempname[k]匹配
+				if (tempname[k] == Bookname[i][j])
+				{
+					//防止局部遍历造成对j的改变，使用temp代替j进行循环
+					int temp = j;
+					//从tempname[k+1]开始搜索
+					for (l = 1; l < len - k; l++, temp++)
+					{
+						//跳过通配符
+						if (tempname[k + l] == '?')
+						{
+							continue;
+						}
+						else if (tempname[k + l] == Bookname[i][j + 1])
+						{
+							//tempname搜索到最后一个字符仍匹配，flag=1
+							if (l == len - k)
+							{
+								flag = 1;
+								break;
+							}
+							continue;
+						}
+						else if (tempname[k + l] != Bookname[i][j + 1])
+							break;
+						if (flag == 1)
+						{
+							cout << Bookname[i] << endl;
+						}
+					}
+				}
+				else
+					continue;
+			}
+		}
+	}
+
+	if (flag == 0)
+	{
+		cout << "未找到该书籍" << endl;
+	}
 }
