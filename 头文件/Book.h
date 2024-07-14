@@ -93,14 +93,24 @@ Book All_Books[10] =
 };
 
 //流输入运算符重载(1)
-istream& operator>>(istream& input, type& type)
+istream& operator>>(istream& input, type& type) 
 {
-	//将整型数强行转换为enum type类
+	cout << "suspense = 1, science = 2, fantasy = 3, romance = 4,criminal = 5, encyclopedia = 6, adventure = 7, realism = 8 " << endl;
+
 	int type_Num;
-	cout << endl << "书籍类型：suspense = 1, science = 2, fantasy = 3, romance = 4, criminal = 5, encyclopedia = 6,adventure = 7, realism = 8" << endl << endl;
-	cout << "输入书籍类型：";
-	input >> type_Num;
-	type = (enum type)type_Num;
+	input >> type_Num; // 读取整数
+
+	switch (type_Num)
+	{
+		case 1:type = suspense; break;
+		case 2:type = science; break;
+		case 3:type = fantasy; break;
+		case 4:type = romance; break;
+		case 5:type = criminal; break;
+		case 6:type = adventure; break;
+		case 7:type = realism; break;
+		default:type = encyclopedia; break;
+	}
 	return input;
 }
 
@@ -125,12 +135,14 @@ ostream& operator<<(ostream& output, type& type_Num)
 {
 	switch (type_Num)
 	{
-	case suspense:output << "suspense" << endl; break;
-	case science:output << "science" << endl; break;
-	case fantasy:output << "fantasy" << endl; break;
-	case romance:output << "romance" << endl; break;
-	case criminal:output << "criminal" << endl; break;
-	default:cout << "encyclopedia" << endl;
+	case suspense:output << 1; break;
+	case science:output << 2; break;
+	case fantasy:output << 3; break;
+	case romance:output << 4; break;
+	case criminal:output << 5; break;
+	case adventure:output << 6; break;
+	case realism:output << 7; break;
+	default:output << 8; break;
 	}
 	return output;
 }
@@ -153,7 +165,7 @@ ostream& operator<<(ostream& output, Book& Book)
 }
 
 
-void Book::Setinfo(int No)
+void Book::Setinfo(int subNo)
 {
 	//No从0开始
 	fstream outfile;
@@ -167,17 +179,18 @@ void Book::Setinfo(int No)
 	}
 
 	//向指定位置输入更改后的书籍信息
-	outfile << All_Books[No].BookName << endl
-		<< All_Books[No].Author << endl
-		<< All_Books[No].Keywords[0] << " " << All_Books[No].Keywords[1] << " " << All_Books[No].Keywords[2] << endl
-		<< All_Books[No].Booktype << endl
-		<< All_Books[No].Outline << endl;
-	cout << "书籍" << No << "信息录入成功" << endl;
+	outfile << All_Books[subNo].BookName << " "
+			<< All_Books[subNo].Author << " "
+			<< All_Books[subNo].Keywords[0] << " " << All_Books[subNo].Keywords[1] << " " << All_Books[subNo].Keywords[2] << " "
+			<< All_Books[subNo].Booktype << " "
+			<< All_Books[subNo].Outline << " "
+			<< All_Books[subNo].BookNo << endl;
+	cout << "书籍" << subNo << "信息录入成功" << endl;
 
 	outfile.close();
 }
 
-void Book::Getinfo(int No) const
+void Book::Getinfo(int subNo)
 {
 	fstream infile;		//定义fstream类对象，实现文件信息的接收
 	infile.open("C:\\Users\\10904\\Desktop\\BMS\\Books_testdata.txt", ios::in );		//infile关联Books_testdata.txt文件
@@ -190,25 +203,30 @@ void Book::Getinfo(int No) const
 	}
 
 	//定义临时string、type类型变量，用于接收文件内容
-	string Temp_BookName;
-	string Temp_Author;
-	string Temp_Keywords[3];
-	string Temp_Outline;
-	type Temp_BookType = (enum type)1;
+	Book Temp_Book;
 
-	//文件指针重定位
-	infile.seekp((sizeof(Book) * 6 + sizeof(type)) * No, ios::beg);
-	infile >> Temp_BookName >> Temp_Author >> Temp_Keywords[0] >> Temp_Keywords[1] >> Temp_Keywords[2] >> Temp_BookType >> Temp_Outline;
+	string line;
+	//跳过前面的记录，直接定位到subNo指定的行
+	for (int i = 0; i < subNo; ++i)
+	{
+		getline(infile, line); // 读取并丢弃前面的行
+	}
+	cin.ignore();
 
-	cout << "书籍名称:" << Temp_BookName << endl;
-	cout << "作者:" << Temp_Author << endl;
-	cout << "关键词:" << Temp_Keywords[0] << " " << Temp_Keywords[1] << " " << Temp_Keywords[2] << endl;
-	cout << "类型:" << Temp_BookType << endl;
-	cout << "简介:" << Temp_Outline << endl;
+	infile >> Temp_Book.BookName >> Temp_Book.Author >> Temp_Book.Keywords[0] >> Temp_Book.Keywords[1] >> Temp_Book.Keywords[2] >> Temp_Book.Booktype >> Temp_Book.Outline>>Temp_Book.BookNo;
+
+	cout << "书籍名称:" << Temp_Book.BookName << endl;
+	cout << "作者:" << Temp_Book.Author << endl;
+	cout << "关键词:" << Temp_Book.Keywords[0] << " " << Temp_Book.Keywords[1] << " " << Temp_Book.Keywords[2] << endl;
+	//这里输入再输出的过程有问题，导致读文件错误
+	cout << "类型:" << Temp_Book.Booktype << endl;
+	cout << "简介:" << Temp_Book.Outline << endl;
+	cout << "书籍编号:" << Temp_Book.BookNo << endl;
 
 	infile.close();
 	system("pause");
 }
+
 
 void Book::Resetinfo(int No)
 {
