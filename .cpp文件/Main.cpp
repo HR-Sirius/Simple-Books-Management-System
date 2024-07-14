@@ -5,7 +5,7 @@
 int main()
 {
 	int i = 0;
-	//防止因上次调试非正常退出导致文件未清空，先调用清空文件函数
+	//防止调试非正常退出导致文件未清空，先调用清空文件函数
 	Users::ClearFile();
 	Book::ClearFile();
 	Librarian::ClearFile();
@@ -46,6 +46,13 @@ int main()
 		cout << "      0.管理员" << endl;
 		cout << "      1.用户" << endl;
 		cin >> Identity_code;
+		cin.ignore();
+		while (Identity_code != 1&&Identity_code != 0)
+		{
+			cout << "重新输入:";
+			cin >> Identity_code;
+			cin.ignore();
+		}
 		if (Identity_code == 0)
 		{
 			while (!is_login)
@@ -142,6 +149,13 @@ int main()
 		}
 		cout << "是否退出图书管理系统？ 0否，1是" << endl;
 		cin >> is_exit;
+		cin.ignore();
+		while (is_exit != 1 &&is_exit != 0)
+		{
+			cout << "重新输入:";
+			cin >> is_exit;
+			cin.ignore();
+		}
 		system("cls");
 	}
 	cout << "欢迎下次使用" << endl << endl;
