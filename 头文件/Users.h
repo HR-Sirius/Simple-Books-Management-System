@@ -110,29 +110,36 @@ Users All_Users[10] =
 	Users("Mu","M")
 };
 
-void Users::Setinfo(int No)
+void Users::Setinfo(int subNo)
 {
 	//No从0开始
 	fstream outfile;
-	outfile.open("C:\\Users\\10904\\Desktop\\BMS\\Users_testdata.txt", ios::out | ios::app );
+	outfile.open("C:\\Users\\10904\\Desktop\\BMS\\Users_testdata.txt", ios::out | ios::app);
 
 	//检测文件打开是否成功
 	if (!outfile)
 	{
-		cout << "File open failed!" << endl;
+		cerr << "File open failed!" << endl;
 		return;
 	}
 
-	//向指定位置输入用户姓名、性别
-	outfile << All_Users[No].UserName << " " << All_Users[No].Sex << endl;
+	//向指定位置输入用户姓名、性别，数据均按行输入，便于后续读取和改写
+	outfile << setw(6) << All_Users[subNo].UserName << setw(3) << All_Users[subNo].Sex << setw(3) << All_Users[subNo].User_No;
+	for (int i = 0; i < 5; i++)
+	{
+		outfile <<setw(3) <<All_Users[subNo].History[i];
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		outfile << setw(3) << All_Users[subNo].Borrowing[i];
+	}
+	outfile << endl;
 
-	cout << "用户" << No << "信息录入成功" << endl;
-
+	cout << "用户" << subNo << "信息录入成功" << endl;
 	outfile.close();
 }
-//通过读文件打印用户信息:Getinfo(int)
 
-void Users::Getinfo(int No) const
+void Users::Getinfo(int subNo)
 {
 	fstream infile;		//定义fstream类对象，实现文件信息的接收
 	infile.open("C:\\Users\\10904\\Desktop\\BMS\\Users_testdata.txt", ios::in);		//infile关联Users_testdata.txt文件
@@ -144,17 +151,42 @@ void Users::Getinfo(int No) const
 		return;
 	}
 
-	//定义临时对象Temp_User
+	//定义临时对象Temp_User接收消息
 	Users Temp_User;
 
-	infile.seekg(No * (sizeof(Book) / sizeof(char)), ios::beg);
-	//文件指针重定位
-	infile >> Temp_User.UserName >> Temp_User.Sex;
+	string line;
+	//跳过前面的记录，直接定位到subNo指定的行
+	for (int i = 0; i < subNo; ++i) 
+	{
+		getline(infile, line); // 读取并丢弃前面的行
+	}
+
+	// 读取指定的记录
+	infile >> Temp_User.UserName >> Temp_User.Sex >> Temp_User.User_No;
+	for (int i = 0; i < 5; i++)
+	{
+		infile >> Temp_User.History[i];
+	}
+	for (int i = 0; i < 3; i++)
+	{
+		infile >> Temp_User.Borrowing[i];
+	}
 
 	cout << "用户姓名:" << Temp_User.UserName << endl;
 	cout << "用户性别:" << Temp_User.Sex << endl;
-	cout << "用户编号:" << (*this).User_No << endl;
-
+	cout << "用户编号:" << Temp_User.User_No << endl;
+	cout << "借阅历史:";
+	for (int i = 0; i < 5; i++)
+	{
+		cout<< setw(3) << Temp_User.History[i];
+	}
+	cout << endl;
+	cout << "借阅中书籍:";
+	for (int i = 0; i < 3; i++)
+	{
+		cout<<setw(3)<<Temp_User.Borrowing[i];
+	}
+	cout << endl;
 	infile.close();
 }
 
