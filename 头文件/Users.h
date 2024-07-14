@@ -190,6 +190,59 @@ void Users::Getinfo(int subNo)
 	infile.close();
 }
 
+/*void Users::Setinfo(int subNo)
+{
+	//二进制方式打开写文件
+	ofstream ofile;
+	ofile.open(Users::Filepath, ios::binary | ios::app);
+
+	//检测文件打开是否成功
+	if (!ofile)
+	{
+		cout << "File open failed!" << endl;
+		return;
+	}
+
+	//用户信息写入文件
+	ofile.write((char*)&All_Users[subNo], sizeof(All_Users[subNo]));
+
+	cout << "用户信息录入成功" << endl;
+	ofile.close();
+}*/
+
+/*void Users::Getinfo(int subNo)
+{
+	//二进制方式打开读文件
+	ifstream ifile;
+	ifile.open(Users::Filepath, ios::binary);
+
+	//检测文件打开是否成功
+	if (!ifile)
+	{
+		cout << "File open failed!" << endl;
+		return;
+	}
+
+	int Sumsize = 0;
+	for (int i = 0; i < subNo; i++)
+	{
+		Sumsize = Sumsize + sizeof(All_Users[i]);
+	}
+
+	//文件指针定位
+	ifile.seekg(Sumsize, ios::beg);
+
+	//读取内容到Temp_User中
+	Users Temp_User;
+	ifile.read((char*)&Temp_User, sizeof(All_Users[subNo]));
+
+	cout << Temp_User;
+
+	cout << "信息读取成功" << endl;
+
+	ifile.close();
+}*/
+
 //通过写文件更改用户信息:Resetinfo(int)
 void Users::Resetinfo(int No)
 {
