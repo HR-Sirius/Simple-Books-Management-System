@@ -355,7 +355,6 @@ void Users::Borrow()
 		else
 		{
 			cout << "无法借阅" << endl;
-			break;
 			return;
 		}
 	}
