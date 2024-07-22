@@ -90,7 +90,7 @@ Librarian::Librarian(string Name,string Sex)
 
 Librarian::~Librarian()
 {
-	cout << "Librarian Destructor called." << endl;
+	//cout << "Librarian Destructor called." << endl;
 }
 
 void Librarian::Add_Book()
@@ -101,7 +101,7 @@ void Librarian::Add_Book()
 	All_Books.push_back(Temp_Book);
 
 	//将对象保存到文件中
-	All_Books[All_Books.size() - 1].Setinfo(All_Books[All_Books.size() - 1].GetBookNo()-1);
+	All_Books[All_Books.size() - 1].Setinfo();
 
 	//此处会释放旧的存储空间，调用析构函数
 	cout << "书籍添加成功" << endl;
@@ -133,16 +133,27 @@ void Librarian::ClearFile()
 
 void Librarian::Del_Book()
 {
-	int BookNo;
+	int No;
 	cout << "输入待删除的书籍编号:";
-	cin >> BookNo;
+	cin >> No;
 
+	cout << No << endl;
+	
 	//创建新迭代器pos
 	auto pos = All_Books.begin();
 
-	//删除第BookNo个元素
-	All_Books.erase(pos + BookNo - 1);
+	for (int i = 0; i < All_Books.size(); i++)
+	{
+		if (No == All_Books[i].GetBookNo())
+		{
+			No = i;
+			break;
+		}
+	}
 
+	//删除第No个元素
+	All_Books.erase(pos + No);
+	
 	cout << "书籍删除成功" << endl;
 }
 
@@ -205,7 +216,8 @@ void Librarian::DisplayAllBooks()
 	int i = 0;
 	cout << "馆藏所有书籍简要信息如下:" << endl;
 
-	for (i = 0; i < All_Books.size(); i++)
+	cout << All_Books.size() << endl;
+	 for (i = 0; i < All_Books.size(); i++)
 	{
 		All_Books[i].Brief_Show();
 	}
