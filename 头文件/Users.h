@@ -58,7 +58,7 @@ public:
 	//输出统计结果:Show_top_Books(),Show_top_Users()
 	void Borrow();
 	static void ClearFile();
-	virtual void Getinfo(int);
+	void Getinfo(int);
 	int GetNo();
 	void ResetAllborrow(int);
 	virtual void Resetborrowing(int);
@@ -308,7 +308,7 @@ Users::Users()
 		History[i] = '\0';
 	for (i = 0; i < 3; i++)
 		Borrowing[i] = '\0';
-	cout << User_No << " " << UserName << " created" << endl;
+	//cout << User_No << " " << UserName << " created" << endl;
 
 }
 
@@ -324,12 +324,12 @@ Users::Users(string username, string sex)
 	//自动编号
 	currentUsers++;
 	User_No = currentUsers;
-	cout << User_No << " " << UserName << " created" << endl;
+	//cout << User_No << " " << UserName << " created" << endl;
 }
 
 Users::~Users()
 {
-	cout << User_No << " " << UserName << " deleted" << endl;
+	//cout << User_No << " " << UserName << " deleted" << endl;
 }
 
 void Users::Borrow()
