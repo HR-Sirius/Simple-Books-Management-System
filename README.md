@@ -1,1 +1,3 @@
-# A simple books management system as a practice
+# 来自准大二学生的图书管理系统
+---
+### 注意：如需运行该程序，请将User.h和Book.h中的FilePath修改为对应路径
