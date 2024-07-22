@@ -45,7 +45,7 @@ public:
 	virtual void Getinfo(int);
 	bool* GetState();
 	virtual void Resetinfo(int);
-	virtual void Setinfo(int);
+	void Setinfo();
 
 	//流输入运算符重载(1)
 	friend istream& operator>>(istream&, type&);
@@ -57,7 +57,7 @@ public:
 	//流输出运算符重载(2)
 	friend ostream& operator<<(ostream&, Book&);
 private:
-	//BookNo为书籍编号（从001开始）
+	//BookNo为书籍编号（从1开始）
 	//借阅状态;State,0已借出,1可借阅,初始状态默认可借阅
 	//书名:BookName
 	//简介:Outline
@@ -65,7 +65,7 @@ private:
 	//类别:Booktype，用枚举类定义，默认每本书只有一种类型
 	//关键词:Keywords,最多三个
 	int BookNo;
-	bool State = 1;
+	bool State;
 	string BookName;
 	string Outline;
 	string Author;
@@ -164,7 +164,7 @@ ostream& operator<<(ostream& output, Book& Book)
 	return output;
 }
 
-void Book::Setinfo(int subNo)
+void Book::Setinfo()
 {
 	//No从0开始
 	fstream outfile;
@@ -178,13 +178,13 @@ void Book::Setinfo(int subNo)
 	}
 
 	//向指定位置输入更改后的书籍信息
-	outfile << All_Books[subNo].BookName << " "
-			<< All_Books[subNo].Author << " "
-			<< All_Books[subNo].Keywords[0] << " " << All_Books[subNo].Keywords[1] << " " << All_Books[subNo].Keywords[2] << " "
-			<< All_Books[subNo].Booktype << " "
-			<< All_Books[subNo].Outline << " "
-			<< All_Books[subNo].BookNo << endl;
-	cout << "书籍" << subNo << "信息录入成功" << endl;
+	outfile << (*this).BookName << " "
+			<< (*this).Author << " "
+			<< (*this).Keywords[0] << " " << (*this).Keywords[1] << " " << (*this).Keywords[2] << " "
+			<< (*this).Booktype << " "
+			<< (*this).Outline << " "
+			<< (*this).BookNo << endl;
+	cout << "书籍" << (*this).BookNo << "信息录入成功" << endl;
 
 	outfile.close();
 }
@@ -251,7 +251,7 @@ void Book::Resetinfo(int subNo)
 
 	for (int i = 0; i < All_Books.size(); i++)
 	{
-		All_Books[i].Setinfo(i);
+		All_Books[i].Setinfo();
 	}
 	cout << "书籍信息修改成功" << endl;
 
@@ -262,7 +262,7 @@ void Book::Brief_Show()
 {
 	//待添加[]重载函数，增加数组越界功能检测
 	//待添加格式化功能，使编号均显示为三位数，如001，015
-	cout << "书籍编号：" << (*this).BookNo << '\t' << All_Books[(*this).BookNo - 1].BookName << endl;
+	cout << "书籍编号：" << (*this).BookNo << '\t' << (*this).BookName << endl;
 }
 
 bool* Book::GetState()
@@ -282,6 +282,7 @@ string Book::GetBookName()
 
 Book::Book() 
 {
+	State = 1;
 	BookNo = currentbook;
 	currentbook++;
 }
@@ -295,6 +296,7 @@ Book::Book(string bookname, string outline, string author, int booktype , string
 	Keywords[0] = keywords_1;
 	Keywords[1] = keywords_2;
 	Keywords[2] = keywords_3;
+	State = 1;
 	//自动编号
 	BookNo = currentbook;
 	currentbook++;
@@ -302,7 +304,7 @@ Book::Book(string bookname, string outline, string author, int booktype , string
 
 Book::~Book()
 {
-	cout << BookNo << " " << BookName << " deleted" << endl;
+	//cout << BookNo << " " << BookName << " deleted" << endl;
 }
 
 void Book::ClearFile()
