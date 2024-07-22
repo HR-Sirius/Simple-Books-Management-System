@@ -21,8 +21,8 @@ class Users :virtual public Management
 	//统计最勤奋读者,用于计数:pop_User[50]
 	//最热门书籍:top_Book[5]，存放书籍编号
 	//最勤奋读者:top_Users[3]，存放用户编号
-	static int pop_Book[10];
-	static int pop_User[10];
+	static int pop_Book[20];
+	static int pop_User[20];
 	static int top_Books[5];
 	static int top_Users[3];
 
@@ -35,7 +35,7 @@ public:
 	string GetName();
 	//搜索方法(最重要函数)，由于搜索结果是书名若干，因此计划将搜索结果保存在临时创建的数组中，逐一打印
 	//输入字符串，遍历所有对象书名，输出对应结果
-	bool Search() ;
+	bool Search();
 
 	//析构函数~Users(),提示作用(可之后改为虚析构函数)
 	Users();
@@ -57,7 +57,7 @@ public:
 	//输出用户借阅历史:Showhistory()
 	//输出统计结果:Show_top_Books(),Show_top_Users()
 	void Borrow();
-    static void ClearFile();
+	static void ClearFile();
 	virtual void Getinfo(int);
 	int GetNo();
 	void ResetAllborrow(int);
@@ -91,8 +91,8 @@ protected:
 
 //静态成员初始化
 int Users::currentUsers = 0;
-int Users::pop_Book[10] = { '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0' };
-int Users::pop_User[10] = { '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0' };
+int Users::pop_Book[20] = { '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0' };
+int Users::pop_User[20] = { '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0' };
 int Users::top_Books[5] = { 0 };
 int Users::top_Users[3] = { 0 };
 string Users::Filepath = "C:\\Users\\10904\\Desktop\\BMS\\Users_testdata.txt";
@@ -129,7 +129,7 @@ void Users::Setinfo(int subNo)
 	outfile << setw(6) << All_Users[subNo].UserName << setw(3) << All_Users[subNo].Sex << setw(3) << All_Users[subNo].User_No;
 	for (int i = 0; i < 5; i++)
 	{
-		outfile <<setw(3) <<All_Users[subNo].History[i];
+		outfile << setw(3) << All_Users[subNo].History[i];
 	}
 	for (int i = 0; i < 3; i++)
 	{
@@ -159,7 +159,7 @@ void Users::Getinfo(int subNo)
 
 	string line;
 	//跳过前面的记录，直接定位到subNo指定的行
-	for (int i = 0; i < subNo; ++i) 
+	for (int i = 0; i < subNo; ++i)
 	{
 		getline(infile, line); // 读取并丢弃前面的行
 	}
@@ -222,7 +222,7 @@ void Users::Resetinfo(int subNo)
 	{
 		All_Users[i].Setinfo(i);
 	}
-	
+
 	cout << "用户信息修改成功" << endl;
 	outfile.close();
 }
@@ -263,11 +263,11 @@ void Users::Showhistory()
 	cout << "借阅历史：" << endl;
 	for (i = 4; i >= 0; i--)
 	{
-		if ((*this).History[i]=='\0')
+		if ((*this).History[i] == '\0')
 			continue;
 		else
 		{
-			cout << All_Books[(*this).History[i]-1].GetBookName()<<endl;
+			cout << All_Books[(*this).History[i] - 1].GetBookName() << endl;
 			flag++;
 		}
 	}
@@ -345,12 +345,12 @@ void Users::Borrow()
 	cin >> No;
 
 	//判断书籍借阅状态
-	if (!*(All_Books[No-1].GetState()))
+	if (!*(All_Books[No - 1].GetState()))
 		cout << "无法借阅" << endl;
 	else
 	{
 		//修改书籍借阅状态
-		*(All_Books[No-1].GetState()) = 0;
+		*(All_Books[No - 1].GetState()) = 0;
 		cout << "成功借阅!" << endl;
 
 		//修改该用户借阅记录
@@ -361,7 +361,7 @@ void Users::Borrow()
 		this->ResetAllborrow(No);
 
 		//增加数据统计功能,若All_Users[i]使用Borrow()成功借出书All_book[j]，则pop_Users[i]++，pop_Books[j]++
-		Users::pop_User[(*this).User_No-1]++;
+		Users::pop_User[(*this).User_No - 1]++;
 		Users::pop_Book[No - 1]++;
 	}
 }
@@ -407,7 +407,7 @@ void Users::Resethistory(int No)
 	//借阅历史通过由新到旧自上到下输出，超出范围时新历史覆盖旧历史
 	int i = 0;
 	//遍历数组检查是否有空位
-	for ( i=0; i < 5; i++)
+	for (i = 0; i < 5; i++)
 	{
 		if ((*this).History[i] != '\0' && i != 4)
 		{
@@ -468,21 +468,21 @@ void Users::Showborrowing()
 	int i;
 	int flag = 0;
 	cout << "当前借阅书籍:";
-	for (i=0; i<3; i++)
+	for (i = 0; i < 3; i++)
 	{
 		if ((*this).Borrowing[i] != '\0')
 		{
 			cout << endl;
 			All_Books[(*this).Borrowing[i] - 1].Brief_Show();
 			flag++;
-		} 
+		}
 	}
 	if (!flag)
 		cout << "无" << endl;
 }
 
 void Users::Show_top_Books()
-{	
+{
 	Bubble_sort(pop_Book, top_Books, 5);
 	int i;
 	cout << "最受欢迎的书籍:" << endl;
@@ -491,7 +491,7 @@ void Users::Show_top_Books()
 		if (Users::top_Books[i - 1] != '\0')
 		{
 			cout << "第" << i << "名：";
-			cout << All_Books[Users::top_Books[i - 1]-1].GetBookName() << endl;
+			cout << All_Books[Users::top_Books[i - 1] - 1].GetBookName() << endl;
 		}
 		else
 		{
@@ -508,10 +508,10 @@ void Users::Show_top_Users()
 	cout << "最勤奋的读者:" << endl;
 	for (i = 1; i <= 3; i++)
 	{
-		if(Users::top_Users[i - 1]!='\0')
+		if (Users::top_Users[i - 1] != '\0')
 		{
 			cout << "第" << i << "名：";
-			cout << All_Users[Users::top_Users[i - 1]-1].GetName() << endl;
+			cout << All_Users[Users::top_Users[i - 1] - 1].GetName() << endl;
 		}
 		else
 		{
@@ -526,7 +526,7 @@ bool Users::Search()
 	string instr;
 	int i;
 	int flag = 0;
-	string TempBookName[10];
+	string TempBookName[20];
 
 	//输入字符串 
 	cout << "输入书名:";
@@ -534,16 +534,16 @@ bool Users::Search()
 	getchar();
 	//getline函数能包含空格
 	getline(cin, instr);
-	
+
 	//避免因大小写导致未查找，将书名与instr均转化为小写
 	string_lowercase(instr);
 	cout << "查找结果:" << endl;
-	for (i = 0; i < 10; i++)
+	for (i = 0; i < All_Books.size(); i++)
 	{
 		TempBookName[i] = All_Books[i].GetBookName();
 		string_lowercase(TempBookName[i]);
 	}
-	
+
 	//从All_Books[0]开始遍历书名
 	for (i = 0; i < All_Books.size(); i++)
 	{
