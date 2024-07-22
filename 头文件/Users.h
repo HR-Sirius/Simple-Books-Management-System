@@ -12,8 +12,6 @@
 #include "Management.h"
 #include "Book.h"
 
-extern Book All_Books[10];
-
 class Users :virtual public Management
 {
 	//搜索、统计等功能需要用到Book类成员，申明为友元类
@@ -40,31 +38,35 @@ public:
 	bool Search() ;
 
 	//析构函数~Users(),提示作用(可之后改为虚析构函数)
-	Users() = default;
+	Users();
 	Users(string, string);
-	~Users() = default;
+	~Users();
 
 	//借阅操作,统计借阅数据:Borrow(int)
 	//文件清理:ClearFile()
 	//通过读文件打印用户信息:Getinfo(int) const
+	//返回用户编号:GetNo()
+	//更改全局借阅记录:ResetAllborrow(int)
 	//更改用户借阅中书籍:Resetborrowing(int)
 	//更改用户借阅历史:Resethistory(int)
 	//通过写文件更改用户信息:Resetinfo(int)
 	//还书:Return()
-	//首次录入文件信息:Setinfo(int)
+	//首次录入文件信息:SetUserinfo(int)
 	//菜单显示:Showmenu()
 	//显示借阅中书籍:Showborrowing()
 	//输出用户借阅历史:Showhistory()
 	//输出统计结果:Show_top_Books(),Show_top_Users()
 	void Borrow();
     static void ClearFile();
-	virtual void Getinfo(int) const;
+	virtual void Getinfo(int);
+	int GetNo();
+	void ResetAllborrow(int);
 	virtual void Resetborrowing(int);
 	virtual void Resethistory(int);
 	virtual void Resetinfo(int);
 	void Return();
-	void Setinfo(int);
-	void Showmenu();
+	virtual void Setinfo(int);
+	virtual void Showmenu();
 	void Showborrowing();
 	void Showhistory();
 	void Show_top_Books();
@@ -88,15 +90,15 @@ protected:
 };
 
 //静态成员初始化
-int Users::currentUsers = 1;
+int Users::currentUsers = 0;
 int Users::pop_Book[10] = { '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0' };
 int Users::pop_User[10] = { '\0','\0','\0','\0','\0','\0','\0','\0','\0','\0' };
 int Users::top_Books[5] = { 0 };
 int Users::top_Users[3] = { 0 };
 string Users::Filepath = "C:\\Users\\10904\\Desktop\\BMS\\Users_testdata.txt";
 
-//Users类全局对象数组
-Users All_Users[10] =
+//Users类全局对象向量
+extern vector<Users> All_Users =
 {
 	Users("Wang","M"),
 	Users("Zhang","M"),
@@ -152,6 +154,7 @@ void Users::Getinfo(int subNo)
 	}
 
 	//定义临时对象Temp_User接收消息
+	currentUsers--;
 	Users Temp_User;
 
 	string line;
@@ -175,7 +178,7 @@ void Users::Getinfo(int subNo)
 	cout << "用户姓名:" << Temp_User.UserName << endl;
 	cout << "用户性别:" << Temp_User.Sex << endl;
 	cout << "用户编号:" << Temp_User.User_No << endl;
-	cout << "借阅历史:";
+	/*cout << "借阅历史:";
 	for (int i = 0; i < 5; i++)
 	{
 		cout<< setw(3) << Temp_User.History[i];
@@ -186,86 +189,70 @@ void Users::Getinfo(int subNo)
 	{
 		cout<<setw(3)<<Temp_User.Borrowing[i];
 	}
-	cout << endl;
+	cout << endl;*/
 	infile.close();
 }
 
-/*void Users::Setinfo(int subNo)
+int Users::GetNo()
 {
-	//二进制方式打开写文件
-	ofstream ofile;
-	ofile.open(Users::Filepath, ios::binary | ios::app);
+	return (*this).User_No;
+}
 
-	//检测文件打开是否成功
-	if (!ofile)
-	{
-		cout << "File open failed!" << endl;
-		return;
-	}
-
-	//用户信息写入文件
-	ofile.write((char*)&All_Users[subNo], sizeof(All_Users[subNo]));
-
-	cout << "用户信息录入成功" << endl;
-	ofile.close();
-}*/
-
-/*void Users::Getinfo(int subNo)
-{
-	//二进制方式打开读文件
-	ifstream ifile;
-	ifile.open(Users::Filepath, ios::binary);
-
-	//检测文件打开是否成功
-	if (!ifile)
-	{
-		cout << "File open failed!" << endl;
-		return;
-	}
-
-	int Sumsize = 0;
-	for (int i = 0; i < subNo; i++)
-	{
-		Sumsize = Sumsize + sizeof(All_Users[i]);
-	}
-
-	//文件指针定位
-	ifile.seekg(Sumsize, ios::beg);
-
-	//读取内容到Temp_User中
-	Users Temp_User;
-	ifile.read((char*)&Temp_User, sizeof(All_Users[subNo]));
-
-	cout << Temp_User;
-
-	cout << "信息读取成功" << endl;
-
-	ifile.close();
-}*/
-
-//通过写文件更改用户信息:Resetinfo(int)
-void Users::Resetinfo(int No)
+void Users::Resetinfo(int subNo)
 {
 	fstream outfile;
-	outfile.open("C:\\Users\\10904\\Desktop\\BMS\\Users_testdata.txt", ios::out | ios::ate );
+	outfile.open("C:\\Users\\10904\\Desktop\\BMS\\Users_testdata.txt", ios::out);
 
 	//检测文件打开是否成功
 	if (!outfile)
 	{
-		cout << "File open failed!" << endl;
+		cerr << "File open failed!" << endl;
 		return;
 	}
 
 	//定义临时对象Temp_User
-	Users Temp_User;
+	currentUsers--;
+	Users Temp_User(All_Users[subNo]);
 	cin >> Temp_User;
-	outfile.seekg(No * (sizeof(Book) / sizeof(char)), ios::beg);
 
-	outfile << Temp_User.UserName << " " << Temp_User.Sex << endl;	//向指定位置输入更改后的用户信息
+	All_Users[subNo].UserName = Temp_User.UserName;
+	All_Users[subNo].Sex = Temp_User.Sex;
 
+	for (int i = 0; i < All_Users.size(); i++)
+	{
+		All_Users[i].Setinfo(i);
+	}
+	
 	cout << "用户信息修改成功" << endl;
-
 	outfile.close();
+}
+
+void Users::ResetAllborrow(int bookNo)
+{
+	int i = 0;
+	//对全局借阅记录的输出
+	for (i = 0; i < 15; i++)
+	{
+		if (All_borrow[i].UserNum != '\0' && i != 14)
+		{
+			continue;
+		}
+		else if (All_borrow[i].UserNum == '\0')
+		{
+			All_borrow[i] = { (*this).User_No,bookNo };
+			break;
+		}
+		else
+		{
+			int j;
+			for (j = 0; j < 14; j++)
+			{
+				All_borrow[i].BookNum = All_borrow[i + 1].BookNum;
+				All_borrow[i].UserNum = All_borrow[i + 1].UserNum;
+			}
+			All_borrow[14] = { (*this).User_No,bookNo };
+		}
+	}
 }
 
 //由新到旧输出用户借阅历史
@@ -273,15 +260,14 @@ void Users::Showhistory()
 {
 	int i;
 	int flag = 0;
-	cout << "借阅历史：";
+	cout << "借阅历史：" << endl;
 	for (i = 4; i >= 0; i--)
 	{
 		if ((*this).History[i]=='\0')
 			continue;
 		else
 		{
-			cout << endl;
-			cout << All_Books[(*this).History[i]-1].GetBookName();
+			cout << All_Books[(*this).History[i]-1].GetBookName()<<endl;
 			flag++;
 		}
 	}
@@ -313,6 +299,19 @@ string Users::GetName()
 	return (*this).UserName;
 }
 
+Users::Users()
+{
+	User_No = currentUsers;
+	currentUsers++;
+	int i;
+	for (i = 0; i < 5; i++)
+		History[i] = '\0';
+	for (i = 0; i < 3; i++)
+		Borrowing[i] = '\0';
+	cout << User_No << " " << UserName << " created" << endl;
+
+}
+
 Users::Users(string username, string sex)
 {
 	UserName = username;
@@ -323,8 +322,14 @@ Users::Users(string username, string sex)
 	for (i = 0; i < 3; i++)
 		Borrowing[i] = '\0';
 	//自动编号
-	User_No = currentUsers;
 	currentUsers++;
+	User_No = currentUsers;
+	cout << User_No << " " << UserName << " created" << endl;
+}
+
+Users::~Users()
+{
+	cout << User_No << " " << UserName << " deleted" << endl;
 }
 
 void Users::Borrow()
@@ -352,6 +357,8 @@ void Users::Borrow()
 		this->Resethistory(No);
 		//修改该用户借阅中书籍
 		this->Resetborrowing(No);
+		//修改全局借阅记录
+		this->ResetAllborrow(No);
 
 		//增加数据统计功能,若All_Users[i]使用Borrow()成功借出书All_book[j]，则pop_Users[i]++，pop_Books[j]++
 		Users::pop_User[(*this).User_No-1]++;
@@ -398,31 +405,29 @@ void Users::Return()
 void Users::Resethistory(int No)
 {
 	//借阅历史通过由新到旧自上到下输出，超出范围时新历史覆盖旧历史
+	int i = 0;
+	//遍历数组检查是否有空位
+	for ( i=0; i < 5; i++)
 	{
-		int i = 0;
-		//遍历数组检查是否有空位
-		for ( i=0; i < 5; i++)
+		if ((*this).History[i] != '\0' && i != 4)
 		{
-			if ((*this).History[i] != '\0' && i != 4)
+			continue;
+		}
+		//有空位，直接插入
+		else if ((*this).History[i] == '\0')
+		{
+			(*this).History[i] = No;
+			break;
+		}
+		//无空位，覆盖旧历史
+		else
+		{
+			int j;
+			for (j = 0; j < 4; j++)
 			{
-				continue;
+				(*this).History[j] = (*this).History[j + 1];
 			}
-			//有空位，直接插入
-			else if ((*this).History[i] == '\0')
-			{
-				(*this).History[i] = No;
-				break;
-			}
-			//无空位，覆盖旧历史
-			else
-			{
-				int j;
-				for (j = 0; j < 4; j++)
-				{
-					(*this).History[j] = (*this).History[j + 1];
-				}
-				(*this).History[4] = No;
-			}
+			(*this).History[4] = No;
 		}
 	}
 }
@@ -445,7 +450,15 @@ void Users::Resetborrowing(int No)
 				break;
 			}
 			//无空位，覆盖旧历史
-			
+			else
+			{
+				int j;
+				for (j = 0; j < 4; j++)
+				{
+					(*this).History[j] = (*this).History[j + 1];
+				}
+				(*this).History[4] = No;
+			}
 		}
 	}
 }
@@ -532,7 +545,7 @@ bool Users::Search()
 	}
 	
 	//从All_Books[0]开始遍历书名
-	for (i = 0; i < 10; i++)
+	for (i = 0; i < All_Books.size(); i++)
 	{
 		//字串匹配
 		if (TempBookName[i].find(instr) != instr.npos)
@@ -562,7 +575,7 @@ void Users::Showmenu()
 	cout << "                              7.查看热门图书" << endl;
 	cout << "                              8.查看最勤奋读者" << endl;
 	cout << "                              9.修改个人信息" << endl;
-	cout << "                              0.退出系统" << endl;
+	cout << "                              0.退出登录" << endl;
 	cout << "===========================================================================" << endl;
 }
 
@@ -574,6 +587,6 @@ void Users::ClearFile()
 		cout << "File open failed!" << endl;
 	}
 	ofile.close();
-	cout << "文件已清理" << endl;
+	cout << "用户信息文件已清理" << endl;
 }
 #endif //!_USERS
