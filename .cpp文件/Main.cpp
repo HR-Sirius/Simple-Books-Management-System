@@ -11,15 +11,15 @@ int main()
 	Librarian::ClearFile();
 
 	cout << endl;
-	//将All_Users[10],All_Books[10],LibManager保存到对应文件中
-	for (i = 0; i < 10; i++)
+	//将All_Users,All_Books,LibManagerxinxi保存到对应文件中
+	for (i = 0; i < All_Users.size(); i++)
 	{
 		All_Users[i].Setinfo(i);
 	}
 	cout << endl;
-	for (i = 0; i < 10; i++)
+	for (i = 0; i < All_Books.size(); i++)
 	{
-		All_Books[i].Setinfo(i);
+		All_Books[i].Setinfo();
 	}
 	cout << endl;
 	LibManager.Setinfo();
@@ -79,12 +79,22 @@ int main()
 				cin >> command_code;
 				switch (command_code)
 				{
-				case 1:cout << "新书录入" << endl; system("pause"); break;
-				case 2:LibManager.Search(); system("pause"); break;
-				case 3:cout << "删除图书" << endl; system("pause"); break;
+				case 1:LibManager.Add_Book(); system("pause"); break;
+				case 2: {
+							int No;
+							if (LibManager.Search())
+							{
+								cout << "输入书籍编号查看详细信息:";
+								cin >> No;
+								All_Books[No - 1].Getinfo(No - 1);
+							}
+							system("pause"); 
+							break; 
+						}
+				case 3:LibManager.Del_Book(); system("pause"); break;
 				case 4:LibManager.DisplayAllBooks(); system("pause"); break;
 				case 5:LibManager.ShowAllborrow(); system("pause"); break;
-				case 6:cout << "新增用户" << endl; system("pause"); break;
+				case 6:LibManager.Add_User(); system("pause"); break;
 				case 7:LibManager.DisplayAllUsers(); system("pause"); break;
 				case 0:cout << "您已退出登录" << endl; system("pause"); break;
 				default:break;
@@ -98,7 +108,7 @@ int main()
 			{
 				cout << "输入用户名：";
 				cin >> Name;
-				for (i = 0; i < 10; i++)
+				for (i = 0; i < All_Users.size(); i++)
 				{
 					if (!Name.compare(All_Users[i].GetName()))
 					{
