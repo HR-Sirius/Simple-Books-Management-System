@@ -10,6 +10,7 @@
 #define _BOOK
 
 #include"Management.h"
+#include<vector>
 
 enum type
 {
@@ -25,7 +26,7 @@ class Book :virtual public Management
 
 public:
 	//析构函数~Book(),提示作用(可之后改为虚析构函数)
-	Book() = default;
+	Book();
 	Book(string, string, string, int, string, string, string);
 	~Book();
 	
@@ -40,11 +41,11 @@ public:
 	void Brief_Show();
 	static void ClearFile();
 	string GetBookName();
-	int* GetBookNo();
-	virtual void Getinfo(int) const;
+	int GetBookNo();
+	virtual void Getinfo(int);
 	bool* GetState();
 	virtual void Resetinfo(int);
-	void Setinfo(int);
+	virtual void Setinfo(int);
 
 	//流输入运算符重载(1)
 	friend istream& operator>>(istream&, type&);
@@ -76,20 +77,19 @@ private:
 int Book::currentbook = 1;
 string Book::Filepath = "C:\\Users\\10904\\Desktop\\BMS\\Books_testdata.txt";
 
-//Book类全局对象数组
-Book All_Books[10] =
+//Book类全局对象向量
+extern vector<Book> All_Books =
 {
-	//Booktype Code:suspense = 1, science = 2, fantasy = 3, romance = 4, criminal = 5, encyclopedia = 6, adventure = 7, realism = 8
-	Book("Harry Potter","A fantasy adventure","J.K Rowling",3,"Harry Potter","Wonderous","Magic"),
-	Book("The Count of Monte Cristo","A righteous revenge","Dumas",7,"Adventure","Monte Cristo","Revenge"),
-	Book("Four Generarions Under One Roof","The detailed description of the life of four generations of an ordinary family shows the great changes in Chinese society and the sufferings of the people during the War of Resistance against Japan","Lao she",8,"War of Resistance against Japanese Aggression","Beijing","Normal Life"),
-	Book("Dou Po Cang Qiong","A teenager with excellent qualifications suddenly became a disrcard person, after experiencing the frustration of three consecutive years of stagnant abilities, he accidentally obtained the help of a mysterious soul named Yao Lao, thus opening a new road to cultivation.","Tian can tu dou",3,"Dou qi","Adventure","Fantasy"),
-	Book("Zei Jing"," ","Xia Xie",5,"High-tech Crime","Justice","Humanity"),
-	Book("The Lord of the Rings","Set in a fictional world called Middle-Earth, the story centers on a hobbit named Frodo Baggins, who inherits a powerful magic ring from his uncle Bilbo Baggins. This ring, forged by the dark Lord Sauron, has the power to enslave the entire world. In order to destroy the ring and save Middle-Earth from falling into darkness, Frodo and his friends form the Guardians of the Ring and embark on a journey full of danger and sacrifice.","J.R.R Tolkien",3,"Frindship and Unity","Power and Corruption","Bravery and Scrifice"),
-	Book("Encyclopaedia Britannica","A globally recognized authoritative reference book"," ",6,"Technique","Literary","History"),
-	Book("One Hundred Thousand whys","A set of popular science books featuring popular, small encyclopedic style"," ",2," "," "," "),
-	Book("Romeo and Juliet","A timeless tragic play","Williams Shakespeare",4,"Love and tragedy","Shakespeare","Opera"),
-	Book("Twenty Thousand Leagues Under the Sea","The story of the naturalist Professor Aronnax, his servant Consay, and the harpooner Ned Land, who accompany Nemo, captain of the submarine Nautilus, on an underwater expedition","Jules Gabriel Verne",7,"Ocean","Pioneering spirit"," ")
+	Book("Harry_Potter","A _fantasy_adventure","J.K_Rowling",3,"Harry_Potter","Wonderous","Magic"),
+	Book("The_Count_of_Monte_Cristo","A_righteous_revenge","Dumas",7,"Adventure","Monte_Cristo","Revenge"),
+	Book("Four_Generarions_Under_One_Roof","AAA","Lao_she",8,"War_of_Resistance_against_Japanese_Aggression","Beijing","Normal_Life"),
+	Book("Dou_Po_Cang_Qiong","BBB","Tian_can_tu_dou",3,"Dou_qi","Adventure","Fantasy"),
+	Book("Zei_Jing","CCC","Xia_Xie",5,"High-tech_Crime","Justice","Humanity"),
+	Book("The_Lord_of_the_Rings","DDD","J.R.R_Tolkien",3,"Frindship_and_Unity","Power_and_Corruption","Bravery_and_crifice"),
+	Book("Encyclopaedia_Britannica","A_reference_book","EngLand",6,"Technique","Literary","History"),
+	Book("One_Hundred_Thousand_whys","A_set_of_science_books"," Chinese ",2,"EEE","FFF","GGG"),
+	Book("Romeo_and_Juliet","A_timeless_tragic_play","Williams_Shakespeare",4,"Love_and_tragedy","Shakespeare","Opera"),
+	Book("Twenty_Thousand_Leagues_Under_the_Sea","The_story_of_Professor_Aronnax","Jules_Gabriel_Verne",7,"Ocean","Pioneering_spirit","Nimo")
 };
 
 //流输入运算符重载(1)
@@ -121,7 +121,7 @@ istream& operator>>(istream& input, Book& Book)
 	input >> Book.BookName;
 	cout << "输入作者姓名：";
 	input >> Book.Author;
-	cout << "输入书籍类型";
+	cout << "输入书籍类型:";
 	input >> Book.Booktype;
 	cout << "输入书籍关键词（至多三个）";
 	input >> Book.Keywords[0] >> Book.Keywords[1] >> Book.Keywords[2];
@@ -155,7 +155,7 @@ ostream& operator<<(ostream& output, Book& Book)
 	output << "作者姓名：" << Book.Author << endl;
 	output << "简介：" << Book.Outline << endl;
 	output << "书籍类型：" << Book.Booktype << endl;
-	output << "书籍关键词：" << Book.Keywords[0] << '\t' << Book.Keywords[1] << '\t' << Book.Keywords[2] << endl;
+	output << "书籍关键词：" << Book.Keywords[0] <<" " << Book.Keywords[1] << " " << Book.Keywords[2] << endl;
 	output << "借阅状态：";
 	if (Book.State)
 		output << "可借出" << endl;
@@ -164,12 +164,11 @@ ostream& operator<<(ostream& output, Book& Book)
 	return output;
 }
 
-
 void Book::Setinfo(int subNo)
 {
 	//No从0开始
 	fstream outfile;
-	outfile.open("C:\\Users\\10904\\Desktop\\BMS\\Books_testdata.txt", ios::out | ios::app);
+	outfile.open(Book::Filepath, ios::out | ios::app);
 
 	//检测文件打开是否成功
 	if (!outfile)
@@ -193,7 +192,7 @@ void Book::Setinfo(int subNo)
 void Book::Getinfo(int subNo)
 {
 	fstream infile;		//定义fstream类对象，实现文件信息的接收
-	infile.open("C:\\Users\\10904\\Desktop\\BMS\\Books_testdata.txt", ios::in );		//infile关联Books_testdata.txt文件
+	infile.open(Book::Filepath, ios::in );		//infile关联Books_testdata.txt文件
 
 	//检测文件打开是否成功
 	if (!infile)
@@ -224,14 +223,12 @@ void Book::Getinfo(int subNo)
 	cout << "书籍编号:" << Temp_Book.BookNo << endl;
 
 	infile.close();
-	system("pause");
 }
 
-
-void Book::Resetinfo(int No)
+void Book::Resetinfo(int subNo)
 {
 	fstream outfile;
-	outfile.open("C:\\Users\\10904\\Desktop\\BMS\\Books_testdata.txt", ios::out | ios::ate );
+	outfile.open(Book::Filepath, ios::out);
 
 	//检测文件打开是否成功
 	if (!outfile)
@@ -240,16 +237,22 @@ void Book::Resetinfo(int No)
 		return;
 	}
 
-	Book Temp_Book;	//定义临时User类型对象，用于输入要修改的文件内容
+	Book Temp_Book(All_Books[subNo]);	//定义临时User类型对象，用于输入要修改的文件内容
 	cin >> Temp_Book;
 
-	outfile.seekp((sizeof(Book) * 6 + sizeof(type)) * No, ios::beg);
-	outfile << Temp_Book.BookName <<" "
-			<< Temp_Book.Author <<" "
-			<< Temp_Book.Keywords[0]<< " " << Temp_Book.Keywords[1]<< " " << Temp_Book.Keywords[2] << " "
-			<< Temp_Book.Booktype <<" "
-			<< Temp_Book.Outline<<endl;	//向指定位置输入更改后的书籍信息
+	All_Books[subNo].BookName = Temp_Book.BookName;
+	All_Books[subNo].Author = Temp_Book.Author;
+	All_Books[subNo].Booktype = Temp_Book.Booktype;
+	for (int i = 0; i < 3; i++)
+	{
+		All_Books[subNo].Keywords[i] = Temp_Book.Keywords[i];
+	}
+	All_Books[subNo].Outline = Temp_Book.Outline;
 
+	for (int i = 0; i < All_Books.size(); i++)
+	{
+		All_Books[i].Setinfo(i);
+	}
 	cout << "书籍信息修改成功" << endl;
 
 	outfile.close();
@@ -267,9 +270,9 @@ bool* Book::GetState()
 	return &(*this).State;
 }
 
-int* Book::GetBookNo()
+int Book::GetBookNo()
 {
-	return &(*this).BookNo;
+	return (*this).BookNo;
 }
 
 string Book::GetBookName()
@@ -277,7 +280,13 @@ string Book::GetBookName()
 	return (*this).BookName;
 }
 
-Book::Book(string bookname, string outline, string author, int booktype =1, string keywords_1="	", string keywords_2="	", string keywords_3= "	")
+Book::Book() 
+{
+	BookNo = currentbook;
+	currentbook++;
+}
+
+Book::Book(string bookname, string outline, string author, int booktype , string keywords_1=" ", string keywords_2=" ", string keywords_3= " ")
 {
 	BookName = bookname;
 	Outline = outline;
@@ -293,7 +302,7 @@ Book::Book(string bookname, string outline, string author, int booktype =1, stri
 
 Book::~Book()
 {
-	cout << "Book destructor called." << endl;
+	cout << BookNo << " " << BookName << " deleted" << endl;
 }
 
 void Book::ClearFile()
@@ -304,7 +313,7 @@ void Book::ClearFile()
 		cout << "File open failed!" << endl;
 	}
 	ofile.close();
-	cout << "文件已清理" << endl;
+	cout << "书籍信息文件已清理" << endl;
 }
 
 #endif //!_BOOK
