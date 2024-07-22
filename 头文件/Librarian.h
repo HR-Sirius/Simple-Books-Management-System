@@ -15,13 +15,16 @@
 class Librarian:public Users
 {
 	//需要用到Book类的函数，申明为友元函数
-	friend void Book::Getinfo(int) const;
+	friend void Book::Getinfo(int);
 	friend void Book::Resetinfo(int);
 
 	static string Filepath;
 
 public:
+	//新增书籍:Add_Book()
+	//新增用户:Add_User()
 	//清理文件内容:ClearFile()
+	//删除书籍:Del_Book()
 	//展示所有用户:DisplayAllUsers()
 	//展示所有书籍:DisplayAllBooks();
 	//通过读文件打印管理员信息:Getinfo()
@@ -29,7 +32,10 @@ public:
 	//首次录入文件信息:Setinfo()
 	//展示全局借阅记录:ShowAllborrow()
 	//展示管理员界面:Showmenu()
+	void Add_Book();
+	void Add_User();
 	static void ClearFile();
+	void Del_Book();
 	void DisplayAllUsers();
 	void DisplayAllBooks();
 	virtual void Getinfo();
@@ -87,6 +93,33 @@ Librarian::~Librarian()
 	cout << "Librarian Destructor called." << endl;
 }
 
+void Librarian::Add_Book()
+{
+	Book Temp_Book;
+	cin >> Temp_Book;
+
+	All_Books.push_back(Temp_Book);
+
+	//将对象保存到文件中
+	All_Books[All_Books.size() - 1].Setinfo(All_Books[All_Books.size() - 1].GetBookNo()-1);
+
+	//此处会释放旧的存储空间，调用析构函数
+	cout << "书籍添加成功" << endl;
+}
+
+void Librarian::Add_User()
+{
+	Users Temp_User;
+	cin >> Temp_User;
+
+	All_Users.push_back(Temp_User);
+
+	//将对象保存到文件中
+	All_Users[All_Users.size() - 1].Setinfo(All_Users[All_Users.size() - 1].GetNo()-1);
+
+	cout << "用户添加成功" << endl;
+}
+
 void Librarian::ClearFile()
 {
 	ofstream ofile(Librarian::Filepath, ios::trunc);
@@ -96,6 +129,21 @@ void Librarian::ClearFile()
 	}
 	ofile.close();
 	cout << "管理员信息文件已清理" << endl;
+}
+
+void Librarian::Del_Book()
+{
+	int BookNo;
+	cout << "输入待删除的书籍编号:";
+	cin >> BookNo;
+
+	//创建新迭代器pos
+	auto pos = All_Books.begin();
+
+	//删除第BookNo个元素
+	All_Books.erase(pos + BookNo - 1);
+
+	cout << "书籍删除成功" << endl;
 }
 
 void Librarian::Setinfo()
@@ -156,7 +204,8 @@ void Librarian::DisplayAllBooks()
 {
 	int i = 0;
 	cout << "馆藏所有书籍简要信息如下:" << endl;
-	for (i = 0; i < 10; i++)
+
+	for (i = 0; i < All_Books.size(); i++)
 	{
 		All_Books[i].Brief_Show();
 	}
@@ -166,10 +215,9 @@ void Librarian::DisplayAllUsers()
 {
 	int i = 0;
 	cout << "图书馆所有用户信息如下:" << endl;
-	for (i = 0; i < 10; i++)
+	for (i = 0; i < All_Users.size(); i++)
 	{
-		All_Users[i].Getinfo(i);
-		cout << endl;
+		cout<<All_Users[i]<<endl;
 	}
 }
 
@@ -197,7 +245,7 @@ void Librarian::ShowAllborrow()
 void Librarian::Showmenu()
 {
 	system("cls");
-	cout << "==========================欢迎使用图书馆后台管理系统：==========================" << endl;
+	cout << "==========================欢迎使用图书馆后台管理系统===========================" << endl;;
 	cout << "                              1.新书录入" << endl;
 	cout << "                              2.图书查询" << endl;
 	cout << "                              3.删除图书" << endl;
@@ -206,5 +254,6 @@ void Librarian::Showmenu()
 	cout << "                              6.新增用户" << endl;
 	cout << "                              7.用户列表" << endl;
 	cout << "                              0.退出登录" << endl;
+	cout << "===============================================================================" << endl;
 }
 #endif //!_LIBRARIAN
