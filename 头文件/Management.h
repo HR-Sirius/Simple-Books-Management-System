@@ -6,29 +6,45 @@
 
 ***********************************************/
 
+#ifndef _MANAGEMENT
+#define _MANAGEMENT
+
 #include<iostream>
 #include<fstream>
 #include<stdlib.h>
 #include<assert.h>
 #include<string>
+#include<vector>
 #include<chrono>
 #include<thread>
+#include<iomanip>
 using namespace std;
 
-#ifndef _MANAGEMENT
-#define _MANAGEMENT
+//为便于管理全局借阅记录，新增结构体Num_Pair,同时记录用户编号和书籍编号
+struct Num_Pair
+{
+	int UserNum;
+	int BookNum;
+};
 
 class Management
 {
 public:
-	//打印对象信息:Getinfo(int)
-	//更改对象信息:Resetinfo(int)
-	virtual void Getinfo(int) const = 0;
+	virtual void Setinfo(int) = 0;
+	virtual void Getinfo(int) = 0;
 	virtual void Resetinfo(int) = 0;
 	//排序:Bubble_sort()
 	void Bubble_sort(int[], int[], int);
 	//string小写转化函数
 	void string_lowercase(string&);
+};
+
+//建立全局借阅记录
+extern struct Num_Pair All_borrow[15] = 
+{ 
+	{'\0','\0'},{'\0','\0'},{'\0','\0'},{'\0','\0'},{'\0','\0'},
+	{'\0','\0'},{'\0','\0'},{'\0','\0'},{'\0','\0'},{'\0','\0'},
+	{'\0','\0'},{'\0','\0'},{'\0','\0'},{'\0','\0'},{'\0','\0'} 
 };
 
 void Management::Bubble_sort(int pop_[], int top_[], int top_length)
