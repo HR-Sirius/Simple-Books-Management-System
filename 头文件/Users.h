@@ -344,8 +344,23 @@ void Users::Borrow()
 	cout << "选择借阅书籍的编号:";
 	cin >> No;
 
+
+	for (int i = 0; i < All_Books.size(); i++)
+	{
+		if (No == All_Books[i].GetBookNo())
+		{
+			No = i+1;
+			break;
+		}
+		else
+		{
+			cout << "无法借阅" << endl;
+			break;
+			return;
+		}
+	}
 	//判断书籍借阅状态
-	if (!*(All_Books[No - 1].GetState()))
+	if (!*(All_Books[No -1].GetState()))
 		cout << "无法借阅" << endl;
 	else
 	{
