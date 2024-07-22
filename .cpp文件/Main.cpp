@@ -37,6 +37,7 @@ int main()
 	bool is_exit = false;
 	//记录指令
 	int command_code = 1;
+	cout << "Notice:" << "管理员姓名为John,可进入管理员界面查看用户列表" << endl;
 	while (!is_exit)
 	{
 		command_code = 1;
