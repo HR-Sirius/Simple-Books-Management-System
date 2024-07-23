@@ -262,6 +262,7 @@ void Book::Brief_Show()
 {
 	//待添加[]重载函数，增加数组越界功能检测
 	//待添加格式化功能，使编号均显示为三位数，如001，015
+	//这里改为了(*this).BookName，而不是由索引导出的编号，避免了越界问题
 	cout << "书籍编号：" << (*this).BookNo << '\t' << (*this).BookName << endl;
 }
 
